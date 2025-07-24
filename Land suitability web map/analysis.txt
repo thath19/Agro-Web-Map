@@ -1,0 +1,79 @@
+import Query from "https://js.arcgis.com/4.29/@arcgis/core/rest/support/Query.js";
+import * as geometryEngine from "https://js.arcgis.com/4.29/@arcgis/core/geometry/geometryEngine.js";
+
+export async function runSuitabilityAnalysis(geometry, view) {
+  const panel = document.getElementById("analysisPanel");
+  panel.innerHTML = "<em>Running analysis...</em>";
+
+  // Get layers (make sure they are in correct order or identify by title)
+  const [soilLayer, waterLayer, builtupLayer] = view.map.layers.toArray();
+
+  // Helper: query features intersecting geometry
+  async function queryLayer(layer, geom) {
+    const query = layer.createQuery();
+    query.geometry = geom;
+    query.spatialRelationship = "intersects";
+    query.outFields = ["*"];
+    query.returnGeometry = true; // We need geometry for built-up calculations
+    const result = await layer.queryFeatures(query);
+    return result.features;
+  }
+
+  try {
+    // Query soil features directly at the point/geometry
+    const soilFeatures = await queryLayer(soilLayer, geometry);
+    const soilAttributes = soilFeatures.map(f => f.attributes);
+    const domSoils = [...new Set(soilAttributes.map(a => a.DOMSOI || "Unknown"))];
+    const faoSoils = [...new Set(soilAttributes.map(a => a.FAOSOIL || "Unknown"))];
+    const cropTypes = [...new Set(soilAttributes.map(a => a.Crop || "N/A"))];
+
+    // Water proximity within 500m buffer
+    const waterBuffer = geometryEngine.geodesicBuffer(geometry, 500, "meters");
+    const waterFeatures = await queryLayer(waterLayer, waterBuffer);
+    const isNearWater = waterFeatures.length > 0;
+
+    // Built-up area within 1 km buffer
+    const bufferGeom = geometryEngine.geodesicBuffer(geometry, 1000, "meters");
+    const builtupFeatures = await queryLayer(builtupLayer, bufferGeom);
+
+    // Calculate built-up area inside buffer
+    let builtupArea = 0;
+    for (const feature of builtupFeatures) {
+      const geom = feature.geometry;
+      if (geom && (geom.type === "polygon" || geom.type === "multipolygon")) {
+        const intersection = geometryEngine.intersect(bufferGeom, geom);
+        if (intersection) {
+          builtupArea += geometryEngine.geodesicArea(intersection, "square-meters");
+        }
+      }
+    }
+    const totalBufferArea = geometryEngine.geodesicArea(bufferGeom, "square-meters");
+    const builtupPercentage = (builtupArea / totalBufferArea) * 100;
+
+    // Build HTML report
+    let html = `<strong>Suitability Analysis:</strong><br/><ul style="line-height: 1.6;">`;
+    html += `<li><strong>Soil Type (DOMSOI):</strong> ${domSoils.join(", ")}</li>`;
+    html += `<li><strong>FAO Soil Class:</strong> ${faoSoils.join(", ")}</li>`;
+    html += `<li><strong>Suggested Crops:</strong> ${cropTypes.join(", ")}</li>`;
+    html += `<li><strong>Nearby Water Source (within 500m):</strong> ${isNearWater ? "Yes ✅" : "No ❌"}</li>`;
+    html += `<li><strong>Built-up Area within 1km:</strong> ${builtupPercentage.toFixed(2)}%</li>`;
+    html += `</ul><hr/><strong>Final Recommendation:</strong><br/>`;
+
+    // Recommendation logic based on built-up % and water proximity
+    if (builtupPercentage >= 20) {
+      html += `<p style="color:red;">❌ Not suitable: Urban coverage exceeds 20% within 1km buffer.</p>`;
+    } else if (!isNearWater) {
+      html += `<p style="color:orange;">⚠️ Limited water access within 500m. Consider irrigation.</p>`;
+    } else if (cropTypes.includes("N/A") || domSoils.includes("Unknown")) {
+      html += `<p style="color:gray;">🛈 Soil or crop data incomplete. Field assessment recommended.</p>`;
+    } else {
+      html += `<p style="color:green;">✅ Suitable for agriculture. Best crops: ${cropTypes.join(", ")}</p>`;
+    }
+
+    panel.innerHTML = html;
+
+  } catch (err) {
+    console.error("Error during suitability analysis:", err);
+    panel.innerHTML = "<p style='color:red;'>❌ Analysis failed. See console for details.</p>";
+  }
+}
