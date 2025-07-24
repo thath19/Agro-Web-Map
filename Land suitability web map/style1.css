@@ -1,0 +1,502 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #00695C 0%, #4DB6AC 100%);
+  overflow: hidden;
+}
+
+/* Main Container */
+#container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+/* Sidebar Styles */
+#sidebar {
+  width: 320px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 2px 0 32px rgba(0, 105, 92, 0.2);
+  padding: 16px;
+  overflow-y: auto;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+#sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+#sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #00695C, #4DB6AC);
+  border-radius: 3px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #004D40, #26A69A);
+}
+
+/* Map View */
+#viewDiv {
+  flex-grow: 1;
+  position: relative;
+  border-radius: 0 20px 20px 0;
+  overflow: hidden;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Widget Sections */
+.widget-section {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 105, 92, 0.1);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.widget-section:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 105, 92, 0.15);
+}
+
+.widget-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #00695C, #4DB6AC);
+  border-radius: 12px 12px 0 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.widget-section:hover::before {
+  opacity: 1;
+}
+
+/* Typography */
+.widget-section h2 {
+  margin: 0 0 10px;
+  color: #2d3748;
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00695C, #4DB6AC);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+}
+
+h3 {
+  color: #4a5568;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+h3::before {
+  content: '🗂️';
+  margin-right: 8px;
+}
+
+p {
+  color: #718096;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+/* Layer List Container */
+#layerListContainer {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid rgba(0, 105, 92, 0.2);
+  min-height: 120px;
+  transition: all 0.3s ease;
+}
+
+#layerListContainer:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 20px rgba(0, 105, 92, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Enhanced Esri Layer List Styles */
+.esri-layer-list {
+  max-height: 300px;
+  overflow-y: auto;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 8px;
+}
+
+.esri-layer-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.esri-layer-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.esri-layer-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #00695C, #4DB6AC);
+  border-radius: 3px;
+}
+
+.esri-layer-list__item {
+  background: rgba(255, 255, 255, 0.9) !important;
+  margin-bottom: 8px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(0, 105, 92, 0.1) !important;
+  transition: all 0.3s ease !important;
+  padding: 8px !important;
+}
+
+.esri-layer-list__item:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  transform: translateX(5px) !important;
+  box-shadow: 0 4px 15px rgba(0, 105, 92, 0.2) !important;
+}
+
+.esri-layer-list__item-title {
+  font-weight: 500 !important;
+  color: #2d3748 !important;
+}
+
+/* Analysis Panel */
+#analysisPanel {
+  margin-top: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6));
+  border-radius: 12px;
+  border: 1px solid rgba(0, 105, 92, 0.2);
+  border-top: 3px solid #00695C;
+  min-height: 100px;
+  font-style: italic;
+  color: #718096;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+#analysisPanel::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(0, 105, 92, 0.1), transparent);
+  transform: rotate(45deg);
+  transition: all 0.6s ease;
+  opacity: 0;
+}
+
+#analysisPanel:hover::before {
+  opacity: 1;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+#analysisPanel.active {
+  background: linear-gradient(135deg, rgba(0, 105, 92, 0.1), rgba(77, 182, 172, 0.1));
+  border-color: rgba(0, 105, 92, 0.4);
+  color: #4a5568;
+  font-style: normal;
+}
+
+/* Enhanced Esri Widget Styles */
+.esri-widget {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 105, 92, 0.2) !important;
+  border-radius: 8px !important;
+}
+
+.esri-widget--button {
+  background: linear-gradient(135deg, #00695C, #4DB6AC) !important;
+  border: none !important;
+  transition: all 0.3s ease !important;
+  color: white !important;
+}
+
+.esri-widget--button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(0, 105, 92, 0.4) !important;
+  background: linear-gradient(135deg, #004D40, #26A69A) !important;
+}
+
+/* Loading Animation */
+.loading {
+  position: relative;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid rgba(0, 105, 92, 0.3);
+  border-top: 2px solid #00695C;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Custom Scrollbar for Webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #00695C, #4DB6AC);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #004D40, #26A69A);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #sidebar {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: -100%;
+    z-index: 2000;
+    transition: left 0.3s ease;
+  }
+  
+  #sidebar.open {
+    left: 0;
+  }
+  
+  #viewDiv {
+    border-radius: 0;
+  }
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Enhanced Focus States for Accessibility */
+button:focus,
+.esri-widget:focus {
+  outline: 2px solid #00695C !important;
+  outline-offset: 2px !important;
+}
+
+/* Custom Tooltip Styles */
+.custom-tooltip {
+  background: rgba(0, 105, 92, 0.9) !important;
+  color: white !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(77, 182, 172, 0.3) !important;
+}
+
+/* Results Display Enhancement */
+.analysis-results {
+  background: linear-gradient(135deg, rgba(0, 105, 92, 0.05), rgba(77, 182, 172, 0.05));
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 10px;
+  border-left: 4px solid #00695C;
+  transition: all 0.3s ease;
+}
+
+.analysis-results:hover {
+  background: linear-gradient(135deg, rgba(0, 105, 92, 0.08), rgba(77, 182, 172, 0.08));
+  transform: translateX(3px);
+}
+
+.analysis-results h4 {
+  color: #2d3748;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.analysis-results ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.analysis-results li {
+  padding: 5px 0;
+  color: #4a5568;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(0, 105, 92, 0.1);
+  transition: color 0.2s ease;
+}
+
+.analysis-results li:last-child {
+  border-bottom: none;
+}
+
+.analysis-results li:hover {
+  color: #00695C;
+}
+
+/* Status Indicators */
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-indicator.active {
+  background: #4DB6AC;
+  box-shadow: 0 0 6px rgba(77, 182, 172, 0.6);
+}
+
+.status-indicator.inactive {
+  background: #e2e8f0;
+}
+
+.status-indicator.loading {
+  background: #00695C;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Interactive Elements */
+.interactive-element {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.interactive-element:hover {
+  transform: scale(1.02);
+}
+
+/* Glassmorphism Enhancement */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+
+/* Utility Classes */
+.teal-gradient {
+  background: linear-gradient(135deg, #00695C, #4DB6AC);
+}
+
+.teal-text {
+  color: #00695C;
+}
+
+.teal-border {
+  border-color: #00695C;
+}
+
+/* Modern Button Styles */
+.modern-button {
+  background: linear-gradient(135deg, #00695C, #4DB6AC);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 105, 92, 0.2);
+}
+
+.modern-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 105, 92, 0.3);
+  background: linear-gradient(135deg, #004D40, #26A69A);
+}
+
+.modern-button:active {
+  transform: translateY(0);
+}
+
+/* Card-like containers */
+.card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 105, 92, 0.1);
+  border: 1px solid rgba(0, 105, 92, 0.1);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 105, 92, 0.15);
+}

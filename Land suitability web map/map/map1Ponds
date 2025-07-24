@@ -1,0 +1,71 @@
+import Map from "https://js.arcgis.com/4.29/@arcgis/core/Map.js";
+import MapView from "https://js.arcgis.com/4.29/@arcgis/core/views/MapView.js";
+import FeatureLayer from "https://js.arcgis.com/4.29/@arcgis/core/layers/FeatureLayer.js";
+import GraphicsLayer from "https://js.arcgis.com/4.29/@arcgis/core/layers/GraphicsLayer.js";
+import Sketch from "https://js.arcgis.com/4.29/@arcgis/core/widgets/Sketch.js";
+import LayerList from "https://js.arcgis.com/4.29/@arcgis/core/widgets/LayerList.js";
+import * as analysis from "./analysis.js";
+
+const soilLayerURL = "https://services5.arcgis.com/MpnsppwdopkoFFFQ/arcgis/rest/services/Soil_type/FeatureServer/0";
+const waterLayerURL = "https://services5.arcgis.com/MpnsppwdopkoFFFQ/arcgis/rest/services/River_coverageNW/FeatureServer/0";
+const builtupLayerURL = "https://services5.arcgis.com/MpnsppwdopkoFFFQ/arcgis/rest/services/built_up/FeatureServer/0";
+const pondsLayerURL = "https://services5.arcgis.com/MpnsppwdopkoFFFQ/arcgis/rest/services/Ponds/FeatureServer/0";
+const agroZoneLayerURL = "https://services5.arcgis.com/MpnsppwdopkoFFFQ/arcgis/rest/services/Agro_ecological_Zone/FeatureServer/0";
+
+// Create the map and view
+const map = new Map({
+  basemap: "topo-vector"
+});
+
+const view = new MapView({
+  container: "viewDiv",
+  map: map,
+  center: [80.7, 7.5],
+  zoom: 8,
+  constraints: {
+    minZoom: 6,
+    maxZoom: 16,
+    rotationEnabled: false
+  }
+});
+
+// Add feature layers
+const soilLayer = new FeatureLayer({ url: soilLayerURL, title: "Soil Type" });
+const waterLayer = new FeatureLayer({ url: waterLayerURL, title: "Water Coverage" });
+const builtupLayer = new FeatureLayer({ url: builtupLayerURL, title: "Built-up Area" });
+const pondsLayer = new FeatureLayer({ url: pondsLayerURL, title: "Ponds" });
+const agroZoneLayer = new FeatureLayer({ url: agroZoneLayerURL, title: "Agro Ecological Zone" });
+
+map.addMany([soilLayer, waterLayer, builtupLayer, pondsLayer, agroZoneLayer]);
+
+// Add drawing layer
+const drawLayer = new GraphicsLayer();
+map.add(drawLayer);
+
+// Sketch widget
+const sketch = new Sketch({
+  view: view,
+  layer: drawLayer,
+  creationMode: "update"
+});
+view.ui.add(sketch, "top-right");
+
+// Handle sketch drawing
+sketch.on("create", (event) => {
+  if (event.state === "complete") {
+    const geometry = event.graphic.geometry;
+
+    // If an analysis module is present, call it
+    if (typeof analysis !== "undefined" && analysis.runSuitabilityAnalysis) {
+      analysis.runSuitabilityAnalysis(geometry, view);
+    } else {
+      console.warn("Suitability analysis function not found.");
+    }
+  }
+});
+
+// LayerList widget (only in sidebar)
+const layerList = new LayerList({
+  view: view,
+  container: "layerListContainer"
+});

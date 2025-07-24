@@ -1,0 +1,50 @@
+    html, body {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+      font-family: sans-serif;
+    }
+
+    #container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #sidebar {
+      width: 320px;
+      background-color: #f9f9f9;
+      padding: 16px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      overflow-y: auto;
+    }
+
+    #viewDiv {
+      flex-grow: 1;
+    }
+
+    .widget-section {
+      margin-bottom: 20px;
+    }
+
+    .widget-section h2 {
+      margin: 0 0 10px;
+    }
+
+    .esri-layer-list {
+      max-height: 300px;
+      overflow-y: auto;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      border-radius: 5px;
+    }
+
+    #analysisPanel {
+      margin-top: 20px;
+      font-style: italic;
+      color: #555;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+    }
+

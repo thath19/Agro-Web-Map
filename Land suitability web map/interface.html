@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crop Map Portal - NW Province</title>
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="interfaceStyle.css">
+</head>
+<body>
+  <!-- Animated background -->
+  <div class="bg-animation">
+    <div class="floating-shape"></div>
+    <div class="floating-shape"></div>
+    <div class="floating-shape"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <div class="logo-icon">🌾</div>
+        <div class="logo-text">Interactive AgroMap</div>
+      </div>
+      <div class="status-badge">NW Province Active</div>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="main-container">
+    <!-- Features grid - Left sidebar -->
+    <section class="features-grid">
+      <!-- Crop Suitability Analysis Card -->
+      <div class="feature-card" onclick="location.href='index1.html'">
+        <div class="feature-icon suitability-icon">🧪</div>
+        <h3 class="feature-title">Crop Suitability Analysis</h3>
+        <p class="feature-description">
+          Advanced AI-powered analysis to determine the best crops for your land based on 
+          soil conditions, climate data, and environmental factors.
+        </p>
+        <div class="feature-stats">
+          <div class="stat-item">
+            <div class="stat-number">95%</div>
+            <div class="stat-label">Accuracy</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">25+</div>
+            <div class="stat-label">Crop Types</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">9</div>
+            <div class="stat-label">Factors</div>
+          </div>
+        </div>
+        <button class="cta-button">Launch Analysis</button>
+      </div>
+
+      <!-- Survey-Based Crop Map Card -->
+      <div class="feature-card" onclick="location.href='cropindex.html'">
+        <div class="feature-icon survey-icon">🌾</div>
+        <h3 class="feature-title">Survey-Based Crop Map</h3>
+        <p class="feature-description">
+          Comprehensive crop mapping based on real farmer surveys and ground-truth data 
+          from across the North Western Province agricultural regions.
+        </p>
+        <div class="feature-stats">
+          <div class="stat-item">
+            <div class="stat-number"></div>
+            <div class="stat-label">Surveys</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">24</div>
+            <div class="stat-label">Districts</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">Live</div>
+            <div class="stat-label">Updates</div>
+          </div>
+        </div>
+        <button class="cta-button secondary">Explore Map</button>
+      </div>
+    </section>
+
+    <!-- Map - Full area on the right -->
+    <section class="map-container">
+      <div id="map"></div>
+    </section>
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-geotiff"></script>
+  <script src="https://unpkg.com/leaflet-geotiff/leaflet-geotiff-plotty.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  <script src="interfacejs.js"></script>
+
+  <script>
+    // Initialize the map
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize map centered on North Western Province, Sri Lanka
+      const map = L.map('map').setView([7.5, 80.0], 9);
+
+      // Add a beautiful tile layer
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 18
+      }).addTo(map);
+
+      // Add a sample marker for the province
+      const marker = L.marker([7.5, 80.0]).addTo(map);
+      marker.bindPopup('<b>North Western Province</b><br>Agricultural Hub of Sri Lanka');
+
+      // Add some visual enhancements
+      map.on('load', function() {
+        console.log('Map loaded successfully');
+      });
+
+      // Add click animation to feature cards
+      document.querySelectorAll('.feature-card').forEach(card => {
+        card.addEventListener('click', function() {
+          this.style.transform = 'scale(0.98)';
+          setTimeout(() => {
+            this.style.transform = '';
+          }, 150);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

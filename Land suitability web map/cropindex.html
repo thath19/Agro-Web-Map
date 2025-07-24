@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sustainable Agriculture Map - NW Province</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="cropmapStyle.css" />
+</head>
+
+<body onload="document.getElementById('map').scrollIntoView();">
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>Existing Agriculture Map</h1>
+      <span class="header-subtitle">Sri Lanka</span>
+    </div>
+    <div class="header-actions">
+      <div class="status-indicator">
+        <div class="status-dot"></div>
+        Live Data
+      </div>
+    </div>
+  </div>
+
+  <!-- Map Container -->
+  <div id="map"></div>
+
+  <!-- Left Panel Container -->
+  <div class="left-panel-container">
+    <!-- Info Panel -->
+    <div class="info-panel fade-in">
+      <h3>🌱 Agricultural Insights</h3>
+      <p>Explore sustainable farming practices and crop data across the North Western Province. Click on map markers for detailed information.</p>
+    </div>
+
+    <!-- Enhanced Survey Button -->
+    <button id="openSurveyBtn">
+      ADD YOUR AGRO-LAND DATA
+    </button>
+  </div>
+
+  <!-- Enhanced Survey Modal -->
+  <div id="surveyModal">
+    <div class="modal-content">
+      <div id="surveyHeader">
+        ADD YOUR CROP DATA
+        <p>Help us improve our agricultural insights by sharing your crop data.</p>
+        <button id="closeSurvey">&times;</button>
+      </div>
+      <div style="position: relative; flex: 1;">
+        <div class="loading-indicator">
+          <div class="loading-spinner"></div>
+          Loading survey form...
+        </div>
+        <iframe src="https://arcg.is/1a5ye8" onload="this.previousElementSibling.style.display='none'"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-geotiff"></script>
+  <script src="https://unpkg.com/leaflet-geotiff/leaflet-geotiff-plotty.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  <script src="cropscript.js"></script>
+
+  <script>
+    const openBtn = document.getElementById('openSurveyBtn');
+    const modal = document.getElementById('surveyModal');
+    const closeBtn = document.getElementById('closeSurvey');
+
+    openBtn.addEventListener('click', () => {
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    });
+
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    // Close modal on backdrop click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    });
+  </script>
+</body>
+</html>
